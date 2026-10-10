@@ -58,17 +58,17 @@ function Booking() {
     e.preventDefault();
     if (saving || !time) return;
     const errs: Record<string, string> = {};
-    if (!form.name.trim()) errs.name = t("err_required");
-    if (!form.email.trim()) errs.email = t("err_required");
-    else if (!EMAIL_RE.test(form.email.trim())) errs.email = t("err_email");
-    if (!form.phone.trim()) errs.phone = t("err_required");
+    if (!form.name.trim()) errs["name"] = t("err_required");
+    if (!form.email.trim()) errs["email"] = t("err_required");
+    else if (!EMAIL_RE.test(form.email.trim())) errs["email"] = t("err_email");
+    if (!form.phone.trim()) errs["phone"] = t("err_required");
     setErrors(errs);
     if (Object.keys(errs).length) return;
     setSaving(true);
     setSubmitError(null);
     const { error } = await supabase.rpc("create_booking", {
       p_date: date, p_time: time, p_guests: guests, p_name: form.name.trim(), p_email: form.email.trim(),
-      p_phone: form.phone.trim(), p_notes: form.notes.trim() || undefined, p_source: "online",
+      p_phone: form.phone.trim(), ...(form.notes.trim() ? { p_notes: form.notes.trim() } : {}), p_source: "online",
     });
     setSaving(false);
     if (error) {

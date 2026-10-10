@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Phone } from "lucide-react";
 import { PublicLayout } from "@/components/site/PublicLayout";
 import { Reveal } from "@/components/site/Reveal";
-import { Hours } from "@/components/site/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { useI18n, type L } from "@/lib/i18n";
 import { VENUE } from "@/lib/site";
@@ -234,7 +233,6 @@ function Home() {
           <Button asChild variant="secondary" size="lg"><Link to="/booking">{t("reserve_table")}</Link></Button>
         </Reveal>
       </section>
-      <div className="hidden"><Hours /></div>
     </PublicLayout>
   );
 }
