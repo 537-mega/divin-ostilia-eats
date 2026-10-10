@@ -14,16 +14,186 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          created_at: string
+          date: string
+          email: string
+          guests: number
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          source: string
+          status: string
+          time: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          email: string
+          guests: number
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          source?: string
+          status?: string
+          time: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          email?: string
+          guests?: number
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          source?: string
+          status?: string
+          time?: string
+        }
+        Relationships: []
+      }
+      closures: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          reason: string | null
+          time: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          reason?: string | null
+          time?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          reason?: string | null
+          time?: string
+        }
+        Relationships: []
+      }
+      menu_content: {
+        Row: {
+          data: Json
+          id: number
+          updated_at: string
+        }
+        Insert: {
+          data: Json
+          id?: number
+          updated_at?: string
+        }
+        Update: {
+          data?: Json
+          id?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      seat_holds: {
+        Row: {
+          booking_id: string | null
+          created_at: string
+          date: string
+          id: string
+          seats: number
+          time: string
+        }
+        Insert: {
+          booking_id?: string | null
+          created_at?: string
+          date: string
+          id?: string
+          seats: number
+          time: string
+        }
+        Update: {
+          booking_id?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          seats?: number
+          time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seat_holds_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      booking_capacity: { Args: never; Returns: number }
+      booking_max_party: { Args: never; Returns: number }
+      booking_slots: { Args: never; Returns: string[] }
+      cancel_booking: { Args: { p_id: string }; Returns: undefined }
+      create_booking: {
+        Args: {
+          p_date: string
+          p_email: string
+          p_guests: number
+          p_name: string
+          p_notes?: string
+          p_phone?: string
+          p_source?: string
+          p_time: string
+        }
+        Returns: Json
+      }
+      get_availability: {
+        Args: { p_date: string }
+        Returns: {
+          capacity: number
+          held: number
+          max_party: number
+          remaining: number
+          slot: string
+          state: string
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "staff"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +320,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "staff"],
+    },
   },
 } as const
